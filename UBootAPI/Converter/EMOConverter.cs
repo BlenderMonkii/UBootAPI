@@ -30,8 +30,8 @@ namespace UBootAPI.Converter
             }
             finally
             {
-                //if (File.Exists(tempInputPath)) File.Delete(tempInputPath);
-                //if (File.Exists(tempOutputPath)) File.Delete(tempOutputPath);
+                if (File.Exists(tempInputPath)) File.Delete(tempInputPath);
+                if (File.Exists(tempOutputPath)) File.Delete(tempOutputPath);
             }
         }
 
