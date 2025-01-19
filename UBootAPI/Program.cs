@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
 using UBootAPI;
@@ -7,7 +9,6 @@ using UBootAPI.Wrapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// CORS-Policy hinzufügen
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -18,19 +19,22 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Konfiguration für große Anfragen (bis 1 GB)
 builder.Services.Configure<KestrelServerOptions>(options =>
 {
-    options.Limits.MaxRequestBodySize = null; // Kein Limit für die Anfragegröße
-});
-builder.Services.Configure<IISServerOptions>(options =>
-{
-    options.MaxRequestBodySize = null; // Kein Limit für IIS
-});
-
-builder.Services.Configure<KestrelServerOptions>(options =>
-{
+    options.Limits.MaxRequestBodySize = 1073741824; // 1 GB
     options.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(5);
     options.Limits.RequestHeadersTimeout = TimeSpan.FromMinutes(5);
+});
+
+builder.Services.Configure<IISServerOptions>(options =>
+{
+    options.MaxRequestBodySize = 1073741824; // 1 GB
+});
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 1073741824; // 1 GB
 });
 
 builder.Services.AddControllers();
@@ -46,8 +50,8 @@ builder.Logging.SetMinimumLevel(LogLevel.Debug);
 var app = builder.Build();
 
 // CORS aktivieren
-//app.UseCors("AllowSpecific");
 app.UseCors("AllowAll");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -61,5 +65,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
+app.MapGet("/", () => "HEALTHY");
+
 
 app.Run();

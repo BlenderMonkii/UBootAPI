@@ -19,10 +19,10 @@ namespace UBootAPI.Factory
             return extension switch
             {
                 ".xyz" => new XYZConverter(_gdalWrapper),
-                //".tif" or ".tiff" => new GeoTiffConverter(_gdalWrapper),
-                //".asc" => new ASCConverter(_gdalWrapper),
+                ".emo" => new EMOConverter(_gdalWrapper),
+                // Füge hier weitere Converter hinzu
                 _ => throw new NotSupportedException($"Dateiformat {extension} wird nicht unterstützt."),
-            };
+            }; 
         }
     }
 }
