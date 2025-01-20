@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing.Imaging;
 using System.Drawing;
+using System.Globalization;
 using UBootAPI.Model;
 using UBootAPI.Service;
 
@@ -11,8 +12,7 @@ namespace UBootAPI.Controller
     [ApiController]
     public class GEBCOController : ControllerBase
     {
-        private readonly IGEBCOService _gebcoService;
-
+        IGEBCOService _gebcoService;
         public GEBCOController(IGEBCOService gebcoService)
         {
             _gebcoService = gebcoService;
@@ -23,15 +23,17 @@ namespace UBootAPI.Controller
         {
             try
             {
-                // Abrufen und Verarbeitung in einer zentralen Methode des Services
-                byte[] grayscaleMap = await _gebcoService.GetGrayscaleHeightMapAsync(request);
+                string filePath = await _gebcoService.GetGrayscaleHeightMapPathAsync(request);
 
-                // Rückgabe als PNG-Datei
-                return File(grayscaleMap, "image/png", "height_map_grayscale.png");
+                return PhysicalFile(filePath, "image/png", Path.GetFileName(filePath));
             }
             catch (HttpRequestException ex)
             {
                 return StatusCode(500, new { message = "Fehler beim Abrufen der Höhendaten", details = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = "Das Bild enthält keine Daten", details = ex.Message });
             }
             catch (System.Exception ex)
             {
@@ -39,6 +41,5 @@ namespace UBootAPI.Controller
             }
         }
     }
-
 }
 

@@ -4,6 +4,6 @@ namespace UBootAPI.Service
 {
     public interface IGEBCOService
     {
-        Task<byte[]> GetGrayscaleHeightMapAsync(BoundingBoxRequest request);
+        Task<string> GetGrayscaleHeightMapPathAsync(BoundingBoxRequest request);
     }
 }
