@@ -27,7 +27,7 @@ namespace UBootAPI.Controller
             try
             {
                 string heightmapPath = _heightmapService.GenerateHeightmap(file);
-                Console.WriteLine($"Heightmap gespeichert unter: {Path.GetFileName(heightmapPath)}");
+
                 return PhysicalFile(heightmapPath, "image/png", Path.GetFileName(heightmapPath));
             }
             catch (Exception ex)

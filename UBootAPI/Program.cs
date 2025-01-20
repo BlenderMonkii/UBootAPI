@@ -38,9 +38,14 @@ builder.Services.Configure<FormOptions>(options =>
 });
 
 builder.Services.AddControllers();
+
+builder.Services.AddHttpClient<GEBCOService>();
+builder.Services.AddScoped<IGEBCOService, GEBCOService>();
+
 builder.Services.AddScoped<IHeightmapService, HeightmapService>();
 builder.Services.AddScoped<IConverterFactory, ConverterFactory>();
 builder.Services.AddSingleton<GDALWrapper>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
