@@ -7,5 +7,4 @@
         public double MaxLon { get; set; } = 10;
         public double MaxLat { get; set; } = 5;
     }
-
 }

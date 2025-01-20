@@ -15,10 +15,8 @@ public class GEBCOService : IGEBCOService
 
     public async Task<string> GetGrayscaleHeightMapPathAsync(BoundingBoxRequest request)
     {
-        // Lade die Heightmap als Byte-Array herunter
         byte[] heightMap = await GetHeightMapAsync(request);
 
-        // Konvertiere die Heightmap in eine Graustufendatei und speichere sie
         return SaveGrayscaleHeightMapToFile(heightMap, request);
     }
 
